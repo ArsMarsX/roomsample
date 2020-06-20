@@ -20,8 +20,8 @@ public interface StationDao {
     void delete(Station station);
 
     @Query("DELETE FROM station_table")
-    void deleteAllNotes();
+    void deleteAllStations();
 
     @Query("SELECT * FROM station_table ORDER BY priority DESC")
-    LiveData<List<Station>> getAllNotes();
+    LiveData<List<Station>> getAllStations();
 }
