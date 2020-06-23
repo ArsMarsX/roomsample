@@ -3,6 +3,7 @@ package com.revolve44.fifthattemptroom;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -13,14 +14,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +39,10 @@ public class MainActivity extends AppCompatActivity {
     private StationDao stationDao2;
 
     private List<Station> stations2 = new ArrayList<>();
+    private List<Station> stations3 = new ArrayList<>();
     int position;
 
+    String TAG = "check";
 
     //Context context;
     //int selectedPosition = 2;
@@ -79,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        SharedPreferences prefs = getApplicationContext().getSharedPreferences(
+        final SharedPreferences prefs = getApplicationContext().getSharedPreferences(
                 "keeper", Context.MODE_PRIVATE);
 
         SharedPreferences.Editor editor = prefs.edit();
@@ -91,9 +97,6 @@ public class MainActivity extends AppCompatActivity {
         //TODO: Step 1 of 4: Create and set OnItemClickListener to the adapter.
         adapter.setOnItemClickListener(onItemClickListener);
 
-
-
-
         FloatingActionButton buttonAddNote = findViewById(R.id.button_add_note);
         buttonAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,17 +106,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        ///////////////////////////////////////////////////////////////////////////////////
         stationViewModel = ViewModelProviders.of(this).get(StationViewModel.class);
         stationViewModel.getAllStations().observe(this, new Observer<List<Station>>() {
             @Override
-            public void onChanged(@Nullable List<Station> stations) {
+            public void onChanged(@Nullable List<Station> stations ) {
+                int listSize = stations.size();
+
+//                for(int i = 0; i < listSize; ++i){
+//                    stations2.add("whatever");
+//                }
+                stations2 = stations;
+                position = prefs.getInt("selected", position);
                 //update RecyclerView
                 adapter.setStations(stations);
-                //stations.get()
-                Toast.makeText(MainActivity.this, "onChanged", Toast.LENGTH_SHORT).show();
+                //stations.get(position);
+                Station currentStation = stations.get(position);
+                Log.i(TAG, "onChanged: test2" + stations);
+                Toast.makeText(MainActivity.this, "Lenght is "+ listSize+" position is "+ position+ " onChanged " + currentStation.getTitle(), Toast.LENGTH_SHORT).show();
+                AccessData();
             }
         });
-
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -126,28 +139,23 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(stations2 + "   999");
                 Station station = new Station("hey",null, 10);
                 System.out.println(station.toString() + "   999");
-
-//               StationDatabase database = StationDatabase.getInstance(context);
-//               Log.d("TAG", "run: 000" + database.stationDao().getById(1));
-
-                //Log.d("TAG", "onCreate: 888"+ stationDao2.getAllStations().toString());
-                //station.setId(0);
-
-//                Employee employee = getEmployeeById(11L);
-//                System.out.println(employee);
-
-//                Station currentStation2 = stations2.get(0);
-//                Log.d("TYT", "run: rock2" + currentStation2.getTitle());// here i may call for a position
-                //Station station1 = stations2.get(1);
-
-
-
-
             }
         }, 2000);
 
     }
     //just transition data from another activity
+
+    public void AccessData(){
+        Station currentStation2 = stations2.get(1);
+        //Station currentStation3 = stations3.get(2);
+        //String a = String.valueOf(stations2.get(1));
+        Snackbar.make(findViewById(android.R.id.content),"Your text "+ currentStation2.getTitle(),Snackbar.LENGTH_SHORT).show();
+
+        Log.i(TAG, "AccessData: " +currentStation2.getTitle() + "and second is " );
+    }
+
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
