@@ -1,6 +1,8 @@
 package com.revolve44.fifthattemptroom;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +30,12 @@ public class AddStationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
+
+        SharedPreferences prefs = getSharedPreferences("keeper", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean("firstStart", false);
+        editor.apply();
+
         editTextTitle = findViewById(R.id.edit_text_title);
         editTextDescription = findViewById(R.id.edit_text_description);
         numberPickerPriority = findViewById(R.id.number_picker_priority);
@@ -52,22 +60,7 @@ public class AddStationActivity extends AppCompatActivity {
         finish();
     }
 
-    public void onCursorClick(View v) {
-//        String query = "SELECT " + noteDatabase._ID + ", "
-//                + noteDatabase.CATNAME + " FROM " + noteDatabase.TABLE_NAME;
-//        Cursor catCursor = sqdb.rawQuery(query, null);
-//
-//        //catCursor.moveToFirst();
-//        String catName;
-//        while (catCursor.moveToNext()) {
-//
-//            catName = catCursor.getString(catCursor
-//                    .getColumnIndex(CatsDataBase.CATNAME));
-//            txtData.append(catName + " ");
-//        }
-//
-//        catCursor.close();
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

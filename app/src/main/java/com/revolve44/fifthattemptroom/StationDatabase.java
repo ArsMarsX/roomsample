@@ -43,9 +43,9 @@ public abstract class StationDatabase extends RoomDatabase {
         }
         @Override
         protected Void doInBackground(Void... voids) {
-            stationDao.insert(new Station("Title 1", "Description 1", 1));
-            stationDao.insert(new Station("Title 2", "Description 2", 2));
-            stationDao.insert(new Station("Title 3", "Description 3", 3));
+              //stationDao.insert(new Station("Title 1", "Description 1", 1));
+//            stationDao.insert(new Station("Title 2", "Description 2", 2));
+//            stationDao.insert(new Station("Title 3", "Description 3", 3));
             return null;
         }
     }

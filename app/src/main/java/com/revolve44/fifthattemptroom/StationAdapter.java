@@ -43,7 +43,7 @@ public class  StationAdapter extends RecyclerView.Adapter<StationAdapter.Station
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.note_item, parent, false);
 
-        Log.d(TAG, "onBindViewHolder: TTT"+ stations.get(1).toString());
+        //Log.d(TAG, "onBindViewHolder: TTT"+ stations.get(1).toString());
 //        System.out.println(stations + " 777");
          context = parent.getContext();
 
@@ -65,8 +65,8 @@ public class  StationAdapter extends RecyclerView.Adapter<StationAdapter.Station
     }
     @Override
     public void onBindViewHolder(@NonNull final StationHolder holder, final int position) {
-        Station currentStation2 = stations.get(0);
-        Log.d("TYT", "run: rock" + currentStation2.getTitle());// here i may call for a position
+       // Station currentStation2 = stations.get(0);
+      //  Log.d("TYT", "run: rock" + currentStation2.getTitle());// here i may call for a position
         Log.d(TAG, "444 onBindViewHolder: 1");
 
 
