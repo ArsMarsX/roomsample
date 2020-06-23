@@ -24,4 +24,12 @@ public interface StationDao {
 
     @Query("SELECT * FROM station_table ORDER BY priority DESC")
     LiveData<List<Station>> getAllStations();
+
+    @Query("SELECT * FROM station_table WHERE id = :id")
+    Station getById(long id);
+
+    //void getById();
+
+//    @Query("SELECT * FROM station_table WHERE id = :id")
+//    Employee getEmployeeById(Long id);
 }

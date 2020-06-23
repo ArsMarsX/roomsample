@@ -4,12 +4,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -29,8 +32,38 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawer;
     private Toolbar toolbarx;
     private NavigationView nvDrawer;
+    private StationDao stationDao2;
+
+    private List<Station> stations2 = new ArrayList<>();
+    int position;
 
 
+    //Context context;
+    //int selectedPosition = 2;
+
+    private View.OnClickListener onItemClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            //TODO: Step 4 of 4: Finally call getTag() on the view.
+            // This viewHolder will have all required values.
+            RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
+            position = viewHolder.getAdapterPosition();
+
+            // viewHolder.getItemId();
+            // viewHolder.getItemViewType();
+//            viewHolder.itemView.;
+            //Station thisItem = stations2.get(position);
+            //Station currentStation = stations2.get(position);
+            //SharedPreferences sharedPreferences = getSharedPreferences("MasterSave", MODE_PRIVATE);
+            SharedPreferences prefs = getSharedPreferences("keeper", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+             //editor.putString("name",nameofStation);
+             editor.putInt("selected", position);
+             editor.apply();
+
+            Toast.makeText(MainActivity.this, "You Clicked: " + position, Toast.LENGTH_SHORT).show();
+        }
+    };
 
 
 
@@ -44,8 +77,19 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        final StationAdapter adapter = new StationAdapter();
+
+
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences(
+                "keeper", Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = prefs.edit();
+       // editor.putInt("selected", selectedPosition);
+        editor.apply();
+
+         final StationAdapter adapter = new StationAdapter();
         recyclerView.setAdapter(adapter);
+        //TODO: Step 1 of 4: Create and set OnItemClickListener to the adapter.
+        adapter.setOnItemClickListener(onItemClickListener);
 
 
 
@@ -65,24 +109,39 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(@Nullable List<Station> stations) {
                 //update RecyclerView
                 adapter.setStations(stations);
+                //stations.get()
                 Toast.makeText(MainActivity.this, "onChanged", Toast.LENGTH_SHORT).show();
             }
         });
+
+
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 //Do something after 100ms
 
-                List<Station> stations2 = new ArrayList<>();
+
                 // You can directly print your ArrayList
                 System.out.println(stations2 + "   999");
                 Station station = new Station("hey",null, 10);
                 System.out.println(station.toString() + "   999");
 
+//               StationDatabase database = StationDatabase.getInstance(context);
+//               Log.d("TAG", "run: 000" + database.stationDao().getById(1));
 
-                Log.d("TAG", "run: " + station.toString());
+                //Log.d("TAG", "onCreate: 888"+ stationDao2.getAllStations().toString());
                 //station.setId(0);
+
+//                Employee employee = getEmployeeById(11L);
+//                System.out.println(employee);
+
+//                Station currentStation2 = stations2.get(0);
+//                Log.d("TYT", "run: rock2" + currentStation2.getTitle());// here i may call for a position
+                //Station station1 = stations2.get(1);
+
+
+
 
             }
         }, 2000);

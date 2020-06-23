@@ -9,7 +9,7 @@ public class Station {
     private int id;
     private String title;
     private String description;
-    private int priority;
+    private int priority; //
 
     public Station(String title, String description, int priority) {
         this.title = title;

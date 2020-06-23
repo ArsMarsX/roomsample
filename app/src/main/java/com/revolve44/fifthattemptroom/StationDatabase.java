@@ -15,7 +15,9 @@ import androidx.sqlite.db.SupportSQLiteOpenHelper;
 @Database(entities = {Station.class}, version = 1)
 public abstract class StationDatabase extends RoomDatabase {
     private static StationDatabase instance;
+
     public abstract StationDao stationDao();
+
     public static synchronized StationDatabase getInstance(Context context) {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),
@@ -26,6 +28,7 @@ public abstract class StationDatabase extends RoomDatabase {
         }
         return instance;
     }
+
     private static RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
