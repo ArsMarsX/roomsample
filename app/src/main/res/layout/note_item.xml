@@ -6,47 +6,55 @@
     android:layout_marginStart="8dp"
     android:layout_marginTop="8dp">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/text_view_priority"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/text_view_title"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="false"
 
-        <TextView
-            android:id="@+id/text_view_title"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="false"
+                android:gravity="left"
+                android:text="Title"
 
-            android:gravity="left"
-            android:text="Title"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            <TextView
+                android:id="@+id/text_view_nominalpower"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="2000 W" />
 
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/text_view_coordination"
+                android:layout_width="268dp"
+                android:layout_height="34dp"
+                android:layout_below="@id/text_view_title"
+                android:text="Lat 23; Lon 34" />
 
-        <TextView
-            android:id="@+id/text_view_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/text_view_title"
-            android:text="Description" />
+            <TextView
+                android:id="@+id/text_view_selected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/green"
+                android:layout_gravity="center"
+                android:text="TextView" />
 
-        <CheckBox
-            android:id="@+id/checkBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="105dp"
-            android:text="Select" />
+        </LinearLayout>
 
-    </RelativeLayout>
+
+    </LinearLayout>
 
 </androidx.cardview.widget.CardView>

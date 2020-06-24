@@ -1,5 +1,6 @@
 package com.revolve44.fifthattemptroom;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -8,6 +9,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,6 +30,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,12 +45,22 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Station> stations2 = new ArrayList<>();
     private List<Station> stations3 = new ArrayList<>();
-    int position;
+    private int position;
 
     String TAG = "check";
+    RecyclerView recyclerView;
 
     //Context context;
     //int selectedPosition = 2;
+    /*
+    Need:
+
+    Name
+    Nominal Power
+    Longitude
+    Latitude
+
+     */
 
 
     public static final int ADD_NOTE_REQUEST = 1;
@@ -69,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
@@ -111,14 +124,11 @@ public class MainActivity extends AppCompatActivity {
                             try {
                                 Station currentStation = stations.get(position);
                                 Log.i(TAG, "onChanged: test2" + stations);
-                                Toast.makeText(MainActivity.this, "Lenght is "+ listSize+" position is "+ position+ " onChanged " + currentStation.getTitle(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Lenght is "+ listSize+" position is "+ position+ " onChanged " + currentStation.getName(), Toast.LENGTH_SHORT).show();
                                 AccessData();
                             }catch (Exception r){
 
                             }
-
-
-
                         }
                     }, 600);
 
@@ -128,6 +138,36 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+                SharedPreferences prefs = getSharedPreferences("keeper", Context.MODE_PRIVATE);
+
+
+                if (position == viewHolder.getAdapterPosition()){
+                    int newpos = viewHolder.getAdapterPosition();
+                    newpos = prefs.getInt("selected", -1);
+                    Snackbar.make(findViewById(android.R.id.content),"Сannot be deleted" ,Snackbar.LENGTH_SHORT).show();
+
+                }else{
+
+                    Snackbar.make(findViewById(android.R.id.content),"Station deleted" ,Snackbar.LENGTH_SHORT).show();
+                }
+                stationViewModel.delete(adapter.getStationAt(viewHolder.getAdapterPosition()));
+                adapter.notifyDataSetChanged();
+
+                Log.i(TAG, "onSwiped: test5 "+ position+ " and swiped pos "+ viewHolder.getAdapterPosition()+ " direction "+ direction);
+                Snackbar.make(findViewById(android.R.id.content),"Station deleted" ,Snackbar.LENGTH_SHORT).show();
+
+            }
+        }).attachToRecyclerView(recyclerView);
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -138,8 +178,8 @@ public class MainActivity extends AppCompatActivity {
 
                 // You can directly print your ArrayList
                 System.out.println(stations2 + "   999");
-                Station station = new Station("hey",null, 10);
-                System.out.println(station.toString() + "   999");
+               // Station station = new Station("hey",null, 10);
+               // System.out.println(station.toString() + "   999");
             }
         }, 2000);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -167,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
             //editor.putString("name",nameofStation);
             editor.putInt("selected", position);
             editor.apply();
+            Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();//? may NULL
 
             Toast.makeText(MainActivity.this, "You Clicked: " + position, Toast.LENGTH_SHORT).show();
         }
@@ -176,9 +217,9 @@ public class MainActivity extends AppCompatActivity {
         Station currentStation2 = stations2.get(position);
         //Station currentStation3 = stations3.get(2);
         //String a = String.valueOf(stations2.get(1));
-        Snackbar.make(findViewById(android.R.id.content),"Your text "+ currentStation2.getTitle(),Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(findViewById(android.R.id.content),"Your text "+ currentStation2.getName(),Snackbar.LENGTH_SHORT).show();
 
-        Log.i(TAG, "AccessData: " +currentStation2.getTitle() + "and second is " );
+        Log.i(TAG, "AccessData: " +currentStation2.getName() + "and second is " );
     }
 
 
@@ -189,12 +230,15 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onActivityResult() called with: requestCode = [" + requestCode + "], resultCode = [" + resultCode + "], data = [" + data + "]");
         if (requestCode == ADD_NOTE_REQUEST && resultCode == RESULT_OK) {// for what this checking?
             //getting from another activity
-            String title = data.getStringExtra(AddStationActivity.EXTRA_TITLE);
-            String description = data.getStringExtra(AddStationActivity.EXTRA_DESCRIPTION);
-            int priority = data.getIntExtra(AddStationActivity.EXTRA_PRIORITY, 1);
+            String name = data.getStringExtra(AddStationActivity.EXTRA_NAME);
+            int nominalpower = data.getIntExtra(AddStationActivity.EXTRA_NOMINALPOWER, 100);
+            float latitude = data.getFloatExtra(AddStationActivity.EXTRA_LATITUDE,0f);
+            float longitude = data.getFloatExtra(AddStationActivity.EXTRA_LONGITUDE,0f);
+//            String description = data.getStringExtra(AddStationActivity.EXTRA_LATITUDE);
+//            int priority = data.getIntExtra(AddStationActivity.EXTRA_PRIORITY);
 
             // sending catching data
-            Station station = new Station(title, description, priority); // init constructor and class entity
+            Station station = new Station( name,  nominalpower,  latitude,  longitude); // init constructor and class entity
             stationViewModel.insert(station); // call method from viewmodel
 
 

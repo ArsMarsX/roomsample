@@ -7,28 +7,58 @@ import androidx.room.PrimaryKey;
 public class Station {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private String title;
-    private String description;
-    private int priority; //
+    private String name;
+//    private String description;
+//    private int priority;
+    private int nominalpower; //
+    private float latitude; //
+    private float longitude; //
 
-    public Station(String title, String description, int priority) {
-        this.title = title;
-        this.description = description;
-        this.priority = priority;
+
+    public Station(String name, int nominalpower, float latitude, float longitude) {
+        this.name = name;
+        this.nominalpower = nominalpower;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
+
     public void setId(int id) {
         this.id = id;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setNominalpower(int nominalpower) {
+        this.nominalpower = nominalpower;
+    }
+
+    public void setLatitude(float latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
+    }
+
     public int getId() {
         return id;
     }
-    public String getTitle() {
-        return title;
+
+    public String getName() {
+        return name;
     }
-    public String getDescription() {
-        return description;
+
+    public int getNominalpower() {
+        return nominalpower;
     }
-    public int getPriority() {
-        return priority;
+
+    public float getLatitude() {
+        return latitude;
+    }
+
+    public float getLongitude() {
+        return longitude;
     }
 }

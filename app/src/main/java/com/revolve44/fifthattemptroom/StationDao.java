@@ -22,7 +22,7 @@ public interface StationDao {
     @Query("DELETE FROM station_table")
     void deleteAllStations();
 
-    @Query("SELECT * FROM station_table ORDER BY priority DESC")
+    @Query("SELECT * FROM station_table ORDER BY id ")// DESC is used to sort the data returned in descending order
     LiveData<List<Station>> getAllStations();
 
     @Query("SELECT * FROM station_table WHERE id = :id")

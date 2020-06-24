@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -32,10 +33,6 @@ public class  StationAdapter extends RecyclerView.Adapter<StationAdapter.Station
     private Context context;
 
     private View.OnClickListener mOnItemClickListener;
-
-
-
-
 
     @NonNull
     @Override
@@ -68,47 +65,54 @@ public class  StationAdapter extends RecyclerView.Adapter<StationAdapter.Station
        // Station currentStation2 = stations.get(0);
       //  Log.d("TYT", "run: rock" + currentStation2.getTitle());// here i may call for a position
         Log.d(TAG, "444 onBindViewHolder: 1");
-
+        SharedPreferences prefs = context.getSharedPreferences(
+                "keeper", Context.MODE_PRIVATE);
+        selectedPosition = prefs.getInt("selected", selectedPosition);
 
         // Position started from 0
         if(selectedPosition == position){
-            holder.setMyStation.setChecked(true);
+            //holder.setMyStation.setChecked(true);
+            holder.textViewSelected.setText("Selected");
+            holder.textViewSelected.setTextColor(ContextCompat.getColor(context, R.color.green));
         }
         else{
-            holder.setMyStation.setChecked(false);
+            //holder.setMyStation.setChecked(false);
+            holder.textViewSelected.setText("not selected");
+            holder.textViewSelected.setTextColor(ContextCompat.getColor(context, R.color.grey50));
         }
         // set data from Database
         Station currentStation = stations.get(position);
 
-        holder.textViewTitle.setText(currentStation.getTitle());
-        holder.textViewDescription.setText(currentStation.getDescription());
-        holder.textViewPriority.setText(String.valueOf(currentStation.getPriority()));
+        holder.textViewTitle.setText(currentStation.getName());
+        holder.textViewCoordination.setText(currentStation.getLatitude()+" ; "+currentStation.getLongitude());
+        holder.textViewNominalPower.setText(String.valueOf(currentStation.getNominalpower()));
+
 
         Log.i(TAG, "StationHolder: LIST " + currentStation.toString());
-        if (position == selectedPosition){
-            nameofStation = currentStation.getTitle();
-            nominalPowerofStation = currentStation.getPriority();
-        }
+//        if (position == selectedPosition){
+//            nameofStation = currentStation.getName();
+//            nominalPowerofStation = currentStation.getPriority();
+//        }
 
-        holder.setMyStation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
-                selectedPosition = holder.getAdapterPosition();
-                //saveSelect(selectedPosition);
-
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Do something after 5s = 5000ms
-
-                        notifyDataSetChanged();
-
-                    }
-                }, 100);
-            }
-        });
+//        holder.setMyStation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+//        {
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+//            {
+//                selectedPosition = holder.getAdapterPosition();
+//                //saveSelect(selectedPosition);
+//
+//                final Handler handler = new Handler();
+//                handler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        // Do something after 5s = 5000ms
+//
+//                        notifyDataSetChanged();
+//
+//                    }
+//                }, 100);
+//            }
+//        });
 
 
 
@@ -120,11 +124,15 @@ public class  StationAdapter extends RecyclerView.Adapter<StationAdapter.Station
     public void setOnItemClickListener(View.OnClickListener itemClickListener) {
         Log.d(TAG, "setOnItemClickListener: its works!");
         mOnItemClickListener = itemClickListener;
-
+        //notifyDataSetChanged();
     }
     @Override
     public int getItemCount() {
         return stations.size();
+    }
+
+    public Station getStationAt(int position){
+        return stations.get(position);
     }
     public void setStations(List<Station> stations) {
         this.stations = stations;
@@ -132,9 +140,9 @@ public class  StationAdapter extends RecyclerView.Adapter<StationAdapter.Station
     }
     class StationHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView textViewTitle;
-        private TextView textViewDescription;
-        private TextView textViewPriority;
-        private CheckBox setMyStation;
+        private TextView textViewCoordination;
+        private TextView textViewNominalPower;
+        private TextView textViewSelected;
         // Started first
 
         public StationHolder(final View itemView) {
@@ -143,10 +151,10 @@ public class  StationAdapter extends RecyclerView.Adapter<StationAdapter.Station
             Log.d(TAG, "444 onBindViewHolder: 3");
 
             textViewTitle = itemView.findViewById(R.id.text_view_title);
-            textViewDescription = itemView.findViewById(R.id.text_view_description);
-            textViewPriority = itemView.findViewById(R.id.text_view_priority);
-            setMyStation = itemView.findViewById(R.id.checkBox);
-
+            textViewCoordination = itemView.findViewById(R.id.text_view_coordination);
+            textViewNominalPower = itemView.findViewById(R.id.text_view_nominalpower);
+            textViewSelected = itemView.findViewById(R.id.text_view_selected);
+            //setMyStation = itemView.findViewById(R.id.checkBox);
 
 
             //TODO: Step 3 of 4: setTag() as current view holder along with
@@ -156,44 +164,33 @@ public class  StationAdapter extends RecyclerView.Adapter<StationAdapter.Station
             itemView.setTag(this);
             itemView.setOnClickListener(mOnItemClickListener);
 
-            setMyStation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    //selectedPosition = getAdapterPosition();
-
-
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Do something after 5s = 5000ms
-
-                            //notifyDataSetChanged();
-                            SharedPreferences prefs = context.getSharedPreferences(
-                                    "keeper", Context.MODE_PRIVATE);
-
-                            SharedPreferences.Editor editor = prefs.edit();
-                            editor.putInt("selected", selectedPosition);
-                            editor.apply();
-                            Log.d(TAG, "run: check prefs");
-
-                        }
-                    }, 50);
-                }
-            });
-
-//            final Handler handler = new Handler();
-//            handler.postDelayed(new Runnable() {
+//            setMyStation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 //                @Override
-//                public void run() {
-//                    // Do something after 5s = 5000ms
+//                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                    //selectedPosition = getAdapterPosition();
 //
+//
+//                    final Handler handler = new Handler();
+//                    handler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            // Do something after 5s = 5000ms
+//
+//                            //notifyDataSetChanged();
+//                            SharedPreferences prefs = context.getSharedPreferences(
+//                                    "keeper", Context.MODE_PRIVATE);
+//
+//                            SharedPreferences.Editor editor = prefs.edit();
+//                            editor.putInt("selected", selectedPosition);
+//                            editor.apply();
+//                            Log.d(TAG, "run: check prefs");
+//
+//                        }
+//                    }, 50);
 //                }
-//            }, 300);
+//            });
 
             Log.d(TAG, "444 onBindViewHolder: 4");
-
-
         }
 
 

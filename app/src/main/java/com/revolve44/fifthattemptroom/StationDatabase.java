@@ -12,7 +12,7 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
 
-@Database(entities = {Station.class}, version = 1)
+@Database(entities = {Station.class}, version = 4)
 public abstract class StationDatabase extends RoomDatabase {
     private static StationDatabase instance;
 

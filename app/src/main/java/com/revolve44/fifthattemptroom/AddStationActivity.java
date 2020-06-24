@@ -17,15 +17,18 @@ import androidx.appcompat.app.AppCompatActivity;
 public class AddStationActivity extends AppCompatActivity {
     public StationDatabase noteDatabase;
     //public final String TABLE_NAME =
-    public static final String EXTRA_TITLE =
-            "com.codinginflow.architectureexample.EXTRA_TITLE";
-    public static final String EXTRA_DESCRIPTION =
-            "com.codinginflow.architectureexample.EXTRA_DESCRIPTION";
-    public static final String EXTRA_PRIORITY =
-            "com.codinginflow.architectureexample.EXTRA_PRIORITY";
-    private EditText editTextTitle;
-    private EditText editTextDescription;
-    private NumberPicker numberPickerPriority;
+    public static final String EXTRA_NAME =
+            "com.revolve44.fifthattemptroom.EXTRA_NAME";
+    public static final String EXTRA_NOMINALPOWER =
+            "com.revolve44.fifthattemptroom.EXTRA_DESCRIPTION";//?
+    public static final String EXTRA_LATITUDE =
+            "com.revolve44.fifthattemptroom.EXTRA_PRIORITY";
+    public static final String EXTRA_LONGITUDE =
+            "com.revolve44.fifthattemptroom.EXTRA_PRIORITY";
+    private EditText NameInput;
+    private EditText NominalPowerInput;
+    private EditText LatInput;
+    private EditText LonInput;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,26 +39,30 @@ public class AddStationActivity extends AppCompatActivity {
         editor.putBoolean("firstStart", false);
         editor.apply();
 
-        editTextTitle = findViewById(R.id.edit_text_title);
-        editTextDescription = findViewById(R.id.edit_text_description);
-        numberPickerPriority = findViewById(R.id.number_picker_priority);
-        numberPickerPriority.setMinValue(1);
-        numberPickerPriority.setMaxValue(10);
+        NameInput = findViewById(R.id.edit_text_title);
+        NominalPowerInput = findViewById(R.id.edit_text_nominalpower);
+        LatInput = findViewById(R.id.edit_text_lat);
+        LonInput = findViewById(R.id.edit_text_lon);
+
+
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_save);
         setTitle("Add Note");
     }
     private void saveNote() {
-        String title = editTextTitle.getText().toString();
-        String description = editTextDescription.getText().toString();
-        int priority = numberPickerPriority.getValue();
-        if (title.trim().isEmpty() || description.trim().isEmpty()) {
+        String name = NameInput.getText().toString();
+        int nominalpower = Integer.parseInt(NominalPowerInput.getText().toString());
+        float lat = Float.parseFloat(LatInput.getText().toString());
+        float lon = Float.parseFloat(LonInput.getText().toString());
+
+        if (name.trim().isEmpty() || nominalpower == 0 || lat == 0 || lon == 0) {
             Toast.makeText(this, "Please insert a title and description", Toast.LENGTH_SHORT).show();
             return;
         }
         Intent data = new Intent();
-        data.putExtra(EXTRA_TITLE, title);
-        data.putExtra(EXTRA_DESCRIPTION, description);
-        data.putExtra(EXTRA_PRIORITY, priority);
+        data.putExtra(EXTRA_NAME, name);
+        data.putExtra(EXTRA_NOMINALPOWER, nominalpower);
+        data.putExtra(EXTRA_LATITUDE, lat);
+        data.putExtra(EXTRA_LONGITUDE, lon);
         setResult(RESULT_OK, data);
         finish();
     }
